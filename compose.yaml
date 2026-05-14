@@ -1,0 +1,20 @@
+﻿services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: transactions
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  api:
+    build:
+      context: .
+      dockerfile: TransactionSystemApi/Dockerfile
+    depends_on:
+      - db
+    environment:
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=transactions;Username=postgres;Password=postgres"
+    ports:
+      - "8080:8080"
