@@ -1,2 +1,5 @@
 .claude/
 .idea/
+.idea/
+TransactionSystemApi/bin/
+TransactionSystemApi/obj/
