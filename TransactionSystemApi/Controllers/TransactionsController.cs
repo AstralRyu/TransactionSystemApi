@@ -15,32 +15,20 @@ public class TransactionsController : ControllerBase
     {
         _transactionService = transactionService;
     }
-    
+
     [HttpPost("create")]
-    public async Task<ActionResult<Transaction>> CreateTransactionAsync([FromBody] CreateTransactionRequest transactionRequest)
-    {        
-        try
-        {
-            var transaction = await _transactionService.CreateTransactionAsync(transactionRequest);
-            return Ok(transaction);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+    public async Task<ActionResult<Transaction>> CreateTransactionAsync(
+        [FromBody] CreateTransactionRequest transactionRequest)
+    {
+        var transaction = await _transactionService.CreateTransactionAsync(transactionRequest);
+        return Ok(transaction);
     }
 
     [HttpGet("{transactionId:guid}/get")]
-    public async Task<ActionResult<ConvertedTransaction>> GetTransactionsAsync(Guid transactionId, [FromQuery] string currency)
+    public async Task<ActionResult<ConvertedTransaction>> GetTransactionsAsync(Guid transactionId,
+        [FromQuery] string currency)
     {
-        try
-        {
-            var convertedTransaction = await _transactionService.GetTransactionAsync(transactionId, currency);
-            return Ok(convertedTransaction);
-        }
-        catch (InvalidOperationException e)
-        {
-            return BadRequest(e.Message);
-        }
+        var convertedTransaction = await _transactionService.GetTransactionAsync(transactionId, currency);
+        return Ok(convertedTransaction);
     }
 }

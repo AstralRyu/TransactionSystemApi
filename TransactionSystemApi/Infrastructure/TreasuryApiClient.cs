@@ -5,24 +5,24 @@ namespace TransactionSystemApi.Infrastructure
 {
     public interface ITreasuryApiClient
     {
-        Task<ExchangeRateResult?> GetRateByCurrencyDateAsync(string currency, DateOnly transactionDate);
+        Task<decimal> GetRateForDateByCurrencyAsync(string currency, DateOnly transactionDate);
+        
+        Task<decimal> GetLatestRateByCurrecnyAsync(string currency);
     }
     
     public class TreasuryApiClient : ITreasuryApiClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IConfiguration _configuration;
+        private readonly string? baseUrl;
 
         public TreasuryApiClient(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _configuration = configuration;
+            baseUrl = configuration.GetValue<string>("TreasuryApiUrl");
         }
         
-        public async Task<ExchangeRateResult?> GetRateByCurrencyDateAsync(string currency, DateOnly transactionDate)
+        public async Task<decimal> GetRateForDateByCurrencyAsync(string currency, DateOnly transactionDate)
         {
-            var baseUrl = _configuration.GetValue<string>("TreasuryApiUrl");
-
             if (baseUrl == null)
             {  
                 throw new NullReferenceException("TreasuryApiUrl is missing");
@@ -38,7 +38,31 @@ namespace TransactionSystemApi.Infrastructure
             var response = await _httpClient.GetFromJsonAsync<TreasuryApiResponse>(url);
 
             var exchangeRate = response?.Data?.FirstOrDefault();
-            return exchangeRate;
+            
+            if (exchangeRate is null || exchangeRate.RecordDate < transactionDate.AddMonths(-6))
+                throw new InvalidOperationException(
+                    $"No exchange rate available for '{currency}' within 6 months of {transactionDate}.");
+
+            return exchangeRate.ExchangeRate;
+        }
+
+        public async Task<decimal> GetLatestRateByCurrecnyAsync(string currency)
+        {
+            var builder = new UriBuilder(baseUrl);
+            builder.Query = $"fields=country_currency_desc,exchange_rate,record_date" +
+                            $"&filter=country_currency_desc:eq:{currency}" +
+                            $"&sort=-record_date" +
+                            "&page[number]=1&page[size]=1";
+            var url = builder.Uri;
+            
+            var response = await _httpClient.GetFromJsonAsync<TreasuryApiResponse>(url);
+            var exchangeRate = response?.Data?.FirstOrDefault();
+            
+            if (exchangeRate is null)
+                throw new InvalidOperationException(
+                    $"No exchange rate available for '{currency}'.");
+
+            return exchangeRate.ExchangeRate;
         }
     }
 }

@@ -17,7 +17,6 @@ builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
-builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 builder.Services.AddHttpClient<ITreasuryApiClient, TreasuryApiClient>();
 
 var app = builder.Build();
@@ -34,6 +33,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
+{
+    var exception = context.Features
+        .Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()?.Error;
+
+    (int statusCode, string message) = exception switch
+    {
+        ArgumentException => (StatusCodes.Status400BadRequest, exception.Message),
+        KeyNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
+        InvalidOperationException => (StatusCodes.Status400BadRequest, exception.Message),
+        _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred.")
+    };
+
+    context.Response.StatusCode = statusCode;
+    context.Response.ContentType = "application/json";
+    await context.Response.WriteAsJsonAsync(new { error = message });
+}));
 
 // app.UseHttpsRedirection();
 app.MapControllers();  

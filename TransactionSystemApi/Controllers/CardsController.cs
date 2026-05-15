@@ -21,19 +21,11 @@ public class CardsController : ControllerBase
     {
         if (request.CreditLimit <= 0)
             return BadRequest("Credit limit must be greater than zero.");
-
-        try
-        {
-            var card = await _cardService.CreateCardAsync(request);
-            return Ok(card);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-
+        
+        var card = await _cardService.CreateCardAsync(request);
+        return Ok(card);
     }
-    
+
     [HttpGet("{cardId:guid}/balance")]
     public async Task<ActionResult<decimal>> GetCardBalance(Guid cardId, [FromQuery] string currency)
     {

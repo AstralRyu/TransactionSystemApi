@@ -1,4 +1,5 @@
 using TransactionSystemApi.DTOs;
+using TransactionSystemApi.Infrastructure;
 using TransactionSystemApi.Models;
 using TransactionSystemApi.Repositories;
 
@@ -15,12 +16,12 @@ namespace TransactionSystemApi.Services
     public class TransactionService : ITransactionService
     {
         private readonly ITransactionRepository _transactionRepository;
-        private readonly ICurrencyService _currencyService;
+        private readonly ITreasuryApiClient _client;
 
-        public TransactionService(ITransactionRepository transactionRepository, ICurrencyService currencyService)
+        public TransactionService(ITransactionRepository transactionRepository, ITreasuryApiClient client)
         {
             _transactionRepository = transactionRepository;
-            _currencyService = currencyService;
+            _client = client;
         }
 
         public async Task<Transaction> CreateTransactionAsync(CreateTransactionRequest request)
@@ -39,7 +40,11 @@ namespace TransactionSystemApi.Services
         public async Task<ConvertedTransaction> GetTransactionAsync(Guid transactionId, string currency)
         {
             var transaction = await _transactionRepository.GetTransactionByIdAsync(transactionId);
-            var exchangeRate = await _currencyService.GetRateForDateAsync(currency, transaction.Date);
+            if (transaction == null)
+            {
+                throw new KeyNotFoundException($"Transaction with id {transactionId} does not exist");
+            }
+            var exchangeRate = await _client.GetRateForDateByCurrencyAsync(currency, transaction.Date);
 
             var convertedAmount = Math.Round(transaction.Amount * exchangeRate, 2);
 

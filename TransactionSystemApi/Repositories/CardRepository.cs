@@ -5,7 +5,7 @@ namespace TransactionSystemApi.Repositories
     public interface ICardRepository
     {
         Task<Card> AddCardAsync(Card card);
-        Task<Card?> GetByIdWithTransactionsAsync(Guid id);
+        Task<Card?> GetCardById(Guid cardId);
     }
     
     public class CardRepository : ICardRepository
@@ -24,11 +24,10 @@ namespace TransactionSystemApi.Repositories
             return card;
         }
 
-        public async Task<Card> GetByIdWithTransactionsAsync(Guid id)
+        public async Task<Card?> GetCardById(Guid cardId)
         {
-            return null;
+            return await _dbContext.Cards.FindAsync(cardId);
         }
-
     }
     
 }
