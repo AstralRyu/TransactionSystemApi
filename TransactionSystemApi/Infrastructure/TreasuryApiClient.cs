@@ -7,7 +7,7 @@ namespace TransactionSystemApi.Infrastructure
     {
         Task<decimal> GetRateForDateByCurrencyAsync(string currency, DateOnly transactionDate);
         
-        Task<decimal> GetLatestRateByCurrecnyAsync(string currency);
+        Task<decimal> GetLatestRateByCurrencyAsync(string currency);
     }
     
     public class TreasuryApiClient : ITreasuryApiClient
@@ -46,7 +46,7 @@ namespace TransactionSystemApi.Infrastructure
             return exchangeRate.ExchangeRate;
         }
 
-        public async Task<decimal> GetLatestRateByCurrecnyAsync(string currency)
+        public async Task<decimal> GetLatestRateByCurrencyAsync(string currency)
         {
             var builder = new UriBuilder(baseUrl);
             builder.Query = $"fields=country_currency_desc,exchange_rate,record_date" +

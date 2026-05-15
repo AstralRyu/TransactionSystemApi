@@ -52,7 +52,7 @@ namespace TransactionSystemApi.Services
             var totalAmount = cardTransactions.Sum(t => t.Amount);
             var balance = card.CreditLimit - totalAmount;
             
-            var exchangeRate = await _client.GetLatestRateByCurrecnyAsync(currency);
+            var exchangeRate = await _client.GetLatestRateByCurrencyAsync(currency);
             balance = Math.Round(balance * exchangeRate, 2);
             
             return balance;

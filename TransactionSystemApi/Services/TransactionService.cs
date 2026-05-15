@@ -31,7 +31,7 @@ namespace TransactionSystemApi.Services
                 Id = Guid.NewGuid(),
                 Amount = request.Amount,
                 Description = request.Description,
-                Date = DateOnly.FromDateTime(DateTime.UtcNow),
+                Date = request.Date,
                 CardId = request.CardId
             };
             return await _transactionRepository.AddTransactionAsync(transaction);
