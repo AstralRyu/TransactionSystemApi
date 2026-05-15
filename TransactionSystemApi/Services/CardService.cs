@@ -6,9 +6,9 @@ namespace TransactionSystemApi.Services
 {
     public interface ICardService
     {
-        Task<Card> CreateCardAsync(decimal creditLimit);
+        Task<Card> CreateCardAsync(CreateCardRequest request);
         
-        Task<GetCardBalanceResponse> GetCardBalanceAsync(string currency);
+        Task<decimal> GetCardBalanceAsync(Guid id, string currency);
     }
     
     public class CardService : ICardService
@@ -20,23 +20,23 @@ namespace TransactionSystemApi.Services
             _cardRepository = cardRepository;
         }
         
-        public async Task<Card> CreateCardAsync(decimal creditLimit)
+        public async Task<Card> CreateCardAsync(CreateCardRequest request)
         {
-            if (creditLimit <= 0)
+            if (request.CreditLimit <= 0)
                 throw new ArgumentException("Credit limit must be greater than zero.");
 
             var card = new Card
             {
                 Id = Guid.NewGuid(),
-                CreditLimit = creditLimit
+                CreditLimit = request.CreditLimit
             };
             
             return await _cardRepository.AddCardAsync(card); 
         }
 
-        public async Task<GetCardBalanceResponse> GetCardBalanceAsync(string currency)
+        public async Task<decimal> GetCardBalanceAsync(Guid id, string currency)
         {
-            return null;
+            return 0;
         }
     }
 }

@@ -17,6 +17,7 @@ builder.Services.AddScoped<ICardService, CardService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 
 var app = builder.Build();
 

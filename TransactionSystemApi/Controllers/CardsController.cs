@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using TransactionSystemApi.DTOs;
+using TransactionSystemApi.Models;
 using TransactionSystemApi.Services;
 
 namespace TransactionSystemApi.Controllers;
 
 [ApiController]
-[Route("cards")]
+[Route("card")]
 public class CardsController : ControllerBase
 {
     private readonly ICardService _cardService;
@@ -15,17 +16,16 @@ public class CardsController : ControllerBase
         _cardService = cardService;
     }
 
-    // POST /cards
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateCardRequest request)
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateCard([FromBody] CreateCardRequest request)
     {
         if (request.CreditLimit <= 0)
             return BadRequest("Credit limit must be greater than zero.");
 
         try
         {
-            var card = await _cardService.CreateCardAsync(request.CreditLimit);
-            return CreatedAtAction(nameof(GetBalance), new { cardId = card.Id }, card);
+            var card = await _cardService.CreateCardAsync(request);
+            return CreatedAtAction(nameof(GetCardBalance), new { cardId = card.Id }, card);
         }
         catch (Exception e)
         {
@@ -33,12 +33,11 @@ public class CardsController : ControllerBase
         }
 
     }
-
-    // GET /cards/{cardId}/balance?currency=CAD
-    [HttpGet("{cardId:guid}/balance")]
-    public async Task<IActionResult> GetBalance(Guid cardId, [FromQuery] string currency = "USD")
+    
+    [HttpGet("{cardId:guid}")]
+    public async Task<ActionResult<decimal>> GetCardBalance(Guid cardId, [FromQuery] string currency)
     {
-        var balance = await _cardService.GetCardBalanceAsync(currency);;
+        var balance = await _cardService.GetCardBalanceAsync(cardId, currency);
         return Ok(balance);
     }
 }
