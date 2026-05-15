@@ -1,5 +1,12 @@
 .claude/
 .idea/
-.idea/
 TransactionSystemApi/bin/
 TransactionSystemApi/obj/
+TransactionSystemApi.Tests/bin/
+TransactionSystemApi.Tests/obj/
+
+# macOS
+.DS_Store
+
+# IDE user-specific settings
+*.DotSettings.user
