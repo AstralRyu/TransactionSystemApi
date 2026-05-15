@@ -85,7 +85,7 @@ Returns the remaining balance on a card, converted to the specified currency usi
 - `cardId` — UUID of the card
 
 **Query parameter:**
-- `currency` — currency name as it appears in the Treasury API (e.g. `Euro`, `Canadian Dollar`, `Japanese Yen`)
+- `currency` — currency name as it appears in the Treasury API (e.g. `Australia-Dollar`, `China-Renminbi`, `Japan-Yen`). For more details, please check Country - Currency Description at [US Treasury Fiscal Data API](https://fiscaldata.treasury.gov/).
 
 **Response `200 OK`:**
 ```json
@@ -137,7 +137,7 @@ Retrieves a transaction and returns the amount converted to the specified curren
 - `transactionId` — UUID of the transaction
 
 **Query parameter:**
-- `currency` — currency name (e.g. `Euro`, `Canadian Dollar`, `Japanese Yen`)
+- `currency` — currency name (e.g. `Australia-Dollar`, `China-Renminbi`, `Japan-Yen`). For more details, please check Country - Currency Description at [US Treasury Fiscal Data API](https://fiscaldata.treasury.gov/).
 
 **Response `200 OK`:**
 ```json
