@@ -16,7 +16,7 @@ A REST API for managing credit cards and transactions with automatic currency co
 
 Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
-Run the following command at <path>/TransactionSystemApi/TransactionSystemApi
+Run the following command at &lt;path&gt;/TransactionSystemApi/TransactionSystemApi
 ```bash
 docker compose up --build
 ```
