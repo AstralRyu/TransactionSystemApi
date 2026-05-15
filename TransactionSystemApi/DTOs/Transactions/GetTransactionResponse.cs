@@ -1,8 +1,8 @@
 namespace TransactionSystemApi.DTOs;
 
-public class GetTransactionRequest
+public class GetTransactionResponse
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
     
     public string Description { get; set; }
     
@@ -10,7 +10,9 @@ public class GetTransactionRequest
     
     public decimal Amount { get; set; }
     
-    public decimal exchangeRate { get; set; }
+    public decimal ExchangeRate { get; set; }
     
     public decimal ConvertedAmount { get; set; }
+    
+    public string Currency { get; set; }
 }

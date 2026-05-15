@@ -16,5 +16,6 @@
       - db
     environment:
       ConnectionStrings__Default: "Host=db;Port=5432;Database=transactions;Username=postgres;Password=postgres"
+      ASPNETCORE_ENVIRONMENT: Development
     ports:
       - "8080:8080"

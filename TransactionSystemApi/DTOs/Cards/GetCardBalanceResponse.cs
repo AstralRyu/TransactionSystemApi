@@ -1,6 +1,6 @@
 namespace TransactionSystemApi.DTOs;
 
-public class GetCardBalanceRequest
+public class GetCardBalanceResponse
 {
     public decimal AvailableBalance { get; set; }
 }

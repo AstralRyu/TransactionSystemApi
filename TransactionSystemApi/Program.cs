@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TransactionSystemApi;
+using TransactionSystemApi.Repositories;
+using TransactionSystemApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddControllers();  // registers controller services
+
+builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 var app = builder.Build();
 
@@ -25,7 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
+// app.UseHttpsRedirection();
+app.MapControllers();  
 
 app.Run();
