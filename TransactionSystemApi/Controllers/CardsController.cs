@@ -17,7 +17,7 @@ public class CardsController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateCard([FromBody] CreateCardRequest request)
+    public async Task<ActionResult<Card>> CreateCard([FromBody] CreateCardRequest request)
     {
         if (request.CreditLimit <= 0)
             return BadRequest("Credit limit must be greater than zero.");
@@ -25,7 +25,7 @@ public class CardsController : ControllerBase
         try
         {
             var card = await _cardService.CreateCardAsync(request);
-            return CreatedAtAction(nameof(GetCardBalance), new { cardId = card.Id }, card);
+            return Ok(card);
         }
         catch (Exception e)
         {
@@ -34,7 +34,7 @@ public class CardsController : ControllerBase
 
     }
     
-    [HttpGet("{cardId:guid}")]
+    [HttpGet("{cardId:guid}/balance")]
     public async Task<ActionResult<decimal>> GetCardBalance(Guid cardId, [FromQuery] string currency)
     {
         var balance = await _cardService.GetCardBalanceAsync(cardId, currency);

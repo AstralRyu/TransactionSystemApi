@@ -17,7 +17,7 @@ public class TransactionsController : ControllerBase
     }
     
     [HttpPost("create")]
-    public async Task<IActionResult> CreateTransactionAsync([FromBody] CreateTransactionRequest transactionRequest)
+    public async Task<ActionResult<Transaction>> CreateTransactionAsync([FromBody] CreateTransactionRequest transactionRequest)
     {        
         try
         {
@@ -30,7 +30,7 @@ public class TransactionsController : ControllerBase
         }
     }
 
-    [HttpGet("{transactionId:uuid}/get")]
+    [HttpGet("{transactionId:guid}/get")]
     public async Task<ActionResult<ConvertedTransaction>> GetTransactionsAsync(Guid transactionId, [FromQuery] string currency)
     {
         try

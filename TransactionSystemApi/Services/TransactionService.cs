@@ -46,6 +46,7 @@ namespace TransactionSystemApi.Services
             return new ConvertedTransaction()
             {
                 Id = transaction.Id,
+                CardId = transaction.CardId,
                 Description = transaction.Description,
                 Date = transaction.Date,
                 Amount = transaction.Amount,

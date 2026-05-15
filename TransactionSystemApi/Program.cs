@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TransactionSystemApi;
+using TransactionSystemApi.Infrastructure;
 using TransactionSystemApi.Repositories;
 using TransactionSystemApi.Services;
 
@@ -12,12 +13,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddControllers();  // registers controller services
-
 builder.Services.AddScoped<ICardService, CardService>();
-builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
+builder.Services.AddHttpClient<ITreasuryApiClient, TreasuryApiClient>();
 
 var app = builder.Build();
 
