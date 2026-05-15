@@ -7,13 +7,19 @@
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   api:
     build:
       context: .
       dockerfile: TransactionSystemApi/Dockerfile
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       ConnectionStrings__Default: "Host=db;Port=5432;Database=transactions;Username=postgres;Password=postgres"
       TreasuryApiUrl: "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/rates_of_exchange"
